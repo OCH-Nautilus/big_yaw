@@ -58,9 +58,9 @@ void cal_powerSet(Power_Limit_type *power_limit,PowerState_control_t PowerState_
 	//计算最小电容能量
 	powerlimit.Min_capEnergy = 0.5*CAP_C*(powerlimit.Min_capVol*powerlimit.Min_capVol);	
 	//裁判系统最大功率(直接由裁判系统传回)
-	powerlimit.referee_max_power=70;//robot_status.chassis_power_limit;
-	//更新裁判系统剩余缓存能量(直接由裁判系统传回)
-	powerlimit.remainEnergy=30;//power_heat_data.buffer_energy;
+	powerlimit.referee_max_power=robot_status.chassis_power_limit;//robot_status.chassis_power_limit;
+	//更新裁判系统剩余缓存能量(直接由裁判系统传回)（通过缓存能量能否稳定在powerlimit.Min_remainEnergy判断功率是否合适）
+	powerlimit.remainEnergy=power_heat_data.buffer_energy;//power_heat_data.buffer_energy;
 	//电容能量利用系数给定
 	powerlimit.P_capEngry = power_limit->referee_max_power/(0.5*23.0*23.0*CAP_C - powerlimit.Min_capEnergy) + 0.1;
 	//缓冲能量保留系数
@@ -81,7 +81,7 @@ void cal_powerSet(Power_Limit_type *power_limit,PowerState_control_t PowerState_
 		if( power_limit->referee_max_power>= 40.0f)
 		power_limit->set_power = power_limit->No_limited_Power;//set_power-动态功率上限， No_limited_Power-没有限制时跑的功率
 		else if(power_limit->referee_max_power < 40.0f&&USART_Rx_data.key.bits.Key_Shift==1)
-		power_limit->set_power = 60;
+		power_limit->set_power = 200;
 		else if(power_limit->referee_max_power < 40.0f&&USART_Rx_data.key.bits.Key_E==1)
 		power_limit->set_power = 200;//set_power-动态功率上限， No_limited_Power-没有限制时跑的功率
 		#endif  
@@ -208,7 +208,7 @@ void chassis_power_control_xj(void)
 {
 	PowerState_up();
 	cal_powerSet(&powerlimit,PowerState_control);
-	powerlimit_control_xj();
+//	powerlimit_control_xj();
 	
 
 }

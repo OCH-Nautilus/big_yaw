@@ -62,7 +62,7 @@ void Send_SupPower(CAN_HandleTypeDef *hcan)
     tx_header.DLC   = 8;
     
       limit = (powerlimit.referee_max_power - 5);    //裁判系统功率上限
-    Power_Buffer = limit - PID_cap_calc(&pid_buff,power_heat_data.buffer_energy,30);
+    Power_Buffer = limit - PID_cap_calc(&pid_buff,power_heat_data.buffer_energy,30);//计算发给电容的功率
 
     limit_100 = limit * 100; 
     Power_Buffer_100 = Power_Buffer * 100; 

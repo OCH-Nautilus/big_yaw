@@ -320,64 +320,126 @@ float speed_limit_top(void)
 #ifdef CAP
 	if (USART_Rx_data.mode.bits.chassis_speed_mode == CHASSIS_SPEED_NORMAL)
 	{
-		switch (powerlimit.referee_max_power)
+		if(USART_Rx_data.key.bits.Key_W||USART_Rx_data.key.bits.Key_S||USART_Rx_data.key.bits.Key_A||USART_Rx_data.key.bits.Key_D)
 		{
-		case 45:
-			CHASSIS.speed_top = TOP_SPEED_45W_CAP - TOP_SPEED_ADD_CAP;
-			break;
+			switch (powerlimit.referee_max_power)
+			{
+				case 45:
+					CHASSIS.speed_top = TOP_SPEED_45W_CAP - TOP_SPEED_ADD_CAP;
+					break;
 
-		case 50:
-			CHASSIS.speed_top = TOP_SPEED_50W_CAP - TOP_SPEED_ADD_CAP;
-			break;
+				case 50:
+					CHASSIS.speed_top = TOP_SPEED_50W_CAP - TOP_SPEED_ADD_CAP;
+					break;
 
-		case 55:
-			CHASSIS.speed_top = TOP_SPEED_55W_CAP - TOP_SPEED_ADD_CAP;
-			break;
+				case 55:
+					CHASSIS.speed_top = TOP_SPEED_55W_CAP - TOP_SPEED_ADD_CAP;
+					break;
 
-		case 60:
-			CHASSIS.speed_top = TOP_SPEED_60W_CAP - TOP_SPEED_ADD_CAP;
-			break;
+				case 60:
+					CHASSIS.speed_top = TOP_SPEED_60W_CAP - TOP_SPEED_ADD_CAP;
+					break;
 
-		case 65:
-			CHASSIS.speed_top = TOP_SPEED_65W_CAP - TOP_SPEED_ADD_CAP;
-			break;
+				case 65:
+					CHASSIS.speed_top = TOP_SPEED_65W_CAP - TOP_SPEED_ADD_CAP;
+					break;
 
-		case 70:
-			CHASSIS.speed_top = TOP_SPEED_70W_CAP - TOP_SPEED_ADD_CAP;
-			break;
+				case 70:
+					CHASSIS.speed_top = TOP_SPEED_70W_CAP - TOP_SPEED_ADD_CAP;
+					break;
 
-		case 75:
-			CHASSIS.speed_top = TOP_SPEED_75W_CAP - TOP_SPEED_ADD_CAP;
-			break;
+				case 75:
+					CHASSIS.speed_top = TOP_SPEED_75W_CAP - TOP_SPEED_ADD_CAP;
+					break;
 
-		case 80:
-			CHASSIS.speed_top = TOP_SPEED_80W_CAP - TOP_SPEED_ADD_CAP;
-			break;
+				case 80:
+					CHASSIS.speed_top = TOP_SPEED_80W_CAP - TOP_SPEED_ADD_CAP;
+					break;
 
-		case 85:
-			CHASSIS.speed_top = TOP_SPEED_85W_CAP - TOP_SPEED_ADD_CAP;
-			break;
+				case 85:
+					CHASSIS.speed_top = TOP_SPEED_85W_CAP - TOP_SPEED_ADD_CAP;
+					break;
 
-		case 90:
-			CHASSIS.speed_top = TOP_SPEED_90W_CAP - TOP_SPEED_ADD_CAP;
-			break;
+				case 90:
+					CHASSIS.speed_top = TOP_SPEED_90W_CAP - TOP_SPEED_ADD_CAP;
+					break;
 
-		case 95:
-			CHASSIS.speed_top = TOP_SPEED_95W_CAP - TOP_SPEED_ADD_CAP;
-			break;
+				case 95:
+					CHASSIS.speed_top = TOP_SPEED_95W_CAP - TOP_SPEED_ADD_CAP;
+					break;
 
-		case 100:
-			CHASSIS.speed_top = TOP_SPEED_100W_CAP - TOP_SPEED_ADD_CAP;
-			break;
+				case 100:
+					CHASSIS.speed_top = TOP_SPEED_100W_CAP - TOP_SPEED_ADD_CAP;
+					break;
 
-		case 120:
-			CHASSIS.speed_top = TOP_SPEED_120W_CAP - TOP_SPEED_ADD_CAP;
-			break;
+				case 120:
+					CHASSIS.speed_top = TOP_SPEED_120W_CAP - TOP_SPEED_ADD_CAP;
+					break;
 
-		default:
-			CHASSIS.speed_top = TOP_SPEED_DEFAULT_CAP - TOP_SPEED_ADD_CAP;
-			break;
+				default:
+					CHASSIS.speed_top = TOP_SPEED_DEFAULT_CAP - TOP_SPEED_ADD_CAP;
+					break;
+			}
 		}
+		else if(!USART_Rx_data.key.bits.Key_W&&!USART_Rx_data.key.bits.Key_S&&!USART_Rx_data.key.bits.Key_A&&!USART_Rx_data.key.bits.Key_D)
+			switch (powerlimit.referee_max_power)
+			{
+				case 45:
+					CHASSIS.speed_top = TOP_SPEED_45W_CAP ;
+					break;
+
+				case 50:
+					CHASSIS.speed_top = TOP_SPEED_50W_CAP ;
+					break;
+
+				case 55:
+					CHASSIS.speed_top = TOP_SPEED_55W_CAP ;
+					break;
+
+				case 60:
+					CHASSIS.speed_top = TOP_SPEED_60W_CAP ;
+					break;
+
+				case 65:
+					CHASSIS.speed_top = TOP_SPEED_65W_CAP ;
+					break;
+
+				case 70:
+					CHASSIS.speed_top = TOP_SPEED_70W_CAP ;
+					break;
+
+				case 75:
+					CHASSIS.speed_top = TOP_SPEED_75W_CAP ;
+					break;
+
+				case 80:
+					CHASSIS.speed_top = TOP_SPEED_80W_CAP ;
+					break;
+
+				case 85:
+					CHASSIS.speed_top = TOP_SPEED_85W_CAP ;
+					break;
+
+				case 90:
+					CHASSIS.speed_top = TOP_SPEED_90W_CAP ;
+					break;
+
+				case 95:
+					CHASSIS.speed_top = TOP_SPEED_95W_CAP ;
+					break;
+
+				case 100:
+					CHASSIS.speed_top = TOP_SPEED_100W_CAP ;
+					break;
+
+				case 120:
+					CHASSIS.speed_top = TOP_SPEED_120W_CAP ;
+					break;
+
+				default:
+					CHASSIS.speed_top = TOP_SPEED_DEFAULT_CAP ;
+					break;
+			}
 	}
 	else if (USART_Rx_data.mode.bits.chassis_speed_mode == CHASSIS_SPEED_SHIFT)
 	{

@@ -146,8 +146,8 @@ void MX_FREERTOS_Init(void) {
   detect_taskHandle = osThreadCreate(osThread(detect_task), NULL);
 
   /* definition and creation of VOFATask */
-  osThreadDef(VOFATask, StartVOFATask, osPriorityAboveNormal, 0, 256);
-  VOFATaskHandle = osThreadCreate(osThread(VOFATask), NULL);
+osThreadDef(VOFATask, StartVOFATask, osPriorityAboveNormal, 0, 256);
+VOFATaskHandle = osThreadCreate(osThread(VOFATask), NULL);
 
   /* definition and creation of myTask09 */
   osThreadDef(myTask09, Transmit_Data_Task, osPriorityAboveNormal, 0, 512);

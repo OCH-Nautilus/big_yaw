@@ -54,6 +54,12 @@ void USART_Data_init(USART_TX_data_t *data_init)
     data_init->initial_speed=0;
 		data_init->ins_big_yaw=0;
 		data_init->big_yaw_target=0;
+		data_init->shooter_17mm_1_barrel_heat=0;
+		data_init->shooter_barrel_cooling_value=0;
+		data_init->shooter_barrel_heat_limit=0;
+		data_init->chassis_power_limit=0;
+		data_init->real_power=0;
+		data_init->buffer_energy=0;
 		data_init->tail = 0;
 }
 
@@ -77,6 +83,12 @@ void USART_Data_Handle(USART_TX_data_t *data)
     data->initial_speed=shoot_data.initial_speed;
 		data->ins_big_yaw=INS.Yaw;
 		data->big_yaw_target=GIMBAL.big_yaw_target;
+		data->shooter_17mm_1_barrel_heat=power_heat_data.shooter_17mm_barrel_heat;
+		data->shooter_barrel_cooling_value=robot_status.shooter_barrel_cooling_value;
+		data->shooter_barrel_heat_limit=robot_status.shooter_barrel_heat_limit; // 热量上限
+		data->chassis_power_limit=robot_status.chassis_power_limit;
+		data->real_power=SuperCAP.real_power;
+		data->buffer_energy=power_heat_data.buffer_energy;
     data->tail = USART_TX_END;
 }
 
@@ -104,10 +116,15 @@ void USART_Data_Send( USART_TX_data_t *data , uint8_t *buff)
     memcpy( buff+7, &data->initial_speed , 4 );
 		memcpy( buff+11, &data->ins_big_yaw , 4 );
 		memcpy( buff+15, &data->big_yaw_target , 4 );
-	  memcpy( buff+19, &data->tail , 1 );
+	  
+		memcpy( buff+19, &data->shooter_barrel_heat_limit , 4 );
+		memcpy( buff+23, &data->shooter_barrel_cooling_value , 4 );
+		memcpy( buff+27, &data->shooter_17mm_1_barrel_heat , 4 );
+		memcpy( buff+31, &data->chassis_power_limit , 4 );
+		memcpy( buff+35, &data->real_power , 4 );
+		memcpy( buff+39, &data->buffer_energy , 4 );
+		memcpy( buff+43, &data->tail , 1 );
 		
-		
-		                        
 		HAL_UART_Transmit_DMA(&huart1,buff,USART_DATA_COUNT);
 }
 
@@ -152,57 +169,6 @@ void Head1_data_Handle(uint8_t *buff, USART_Rx_data_t *data)
     }
 }
 
-//int qaz,cvv;
-//void Head1_data_Handle(uint8_t *buff,USART_Rx_data_t *data)
-//{
-//cvv++;
-//	if(buff[0] == USART_RX_HAED && buff[DATA_COUNT-1] == USART_RX_END)
-//	{
-//		qaz++;
-//				
-//		data->controls_mode=buff[1];
-////      Algorithm_int16_u rc_ctrl_r_vx;
-////      Algorithm_int16_u rc_ctrl_r_vy;
-////      Algorithm_int16_u rc_ctrl_l_vx;
-////      Algorithm_int16_u rc_ctrl_l_vy;
-////      Algorithm_fp32_u small_yaw_pos;
-////      Algorithm_fp32_u yaw;
-////			Algorithm_fp32_u mouse_vx;
-////			Algorithm_fp32_u mouse_vy;
-////      data->controls_mode=buff[1];
-////      data->gimbal_mode=buff[2];
-////      data->vision_mode=buff[3];
-////      data->shoot_mode=buff[4];
-////      data->trigger_mode= buff[5];
-////      data->chassis_mode=buff[6];
-////      data->chassis_speed_mode=buff[7];
-////      for(int i=0;i<4;i++)
-////      {
-////          rc_ctrl_r_vx.d[i]=buff[8+i];
-////          rc_ctrl_r_vy.d[i]=buff[12+i];
-////          rc_ctrl_l_vx.d[i]=buff[16+i];
-////          rc_ctrl_l_vy.d[i]=buff[20+i];
-////					small_yaw_pos.d[i]=buff[24+i];
-////          yaw.d[i]=buff[28+i];
-////					mouse_vx.d[i]=buff[32+i];
-////					mouse_vy.d[i]=buff[36+i];
-////				
-////      }
-////			data->Key_W=buff[40];
-////			data->Key_S=buff[41];
-////			data->Key_A=buff[42];
-////			data->Key_D=buff[43];
 
-////			data->rc_ctrl_r_vx=rc_ctrl_r_vx.data;
-////      data->rc_ctrl_r_vy=rc_ctrl_r_vy.data;
-////      data->rc_ctrl_l_vx=rc_ctrl_l_vx.data;
-////      data->rc_ctrl_l_vy=rc_ctrl_l_vy.data;
-////      data->small_yaw_pos=small_yaw_pos.data;
-////      data->yaw=yaw.data;
-////			data->mouse_vx=mouse_vx.data;
-////			data->mouse_vy=mouse_vy.data;
-//	}
-
-//}
 
 

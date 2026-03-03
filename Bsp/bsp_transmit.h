@@ -18,7 +18,7 @@
 #define USART_TX_HAED   0XA5
 #define USART_TX_END    0XAA
 
-#define USART_DATA_COUNT  20//发送字节数
+#define USART_DATA_COUNT  44//发送字节数
 
 // 接收端数据结构体
 typedef struct
@@ -76,32 +76,8 @@ typedef struct
 		
     uint8_t tail;
 } USART_Rx_data_t;
-//typedef struct
-//{
 
-//	uint8_t head;
-//	uint8_t controls_mode;
-//	uint8_t gimbal_mode;
-//	uint8_t vision_mode;
-//	uint8_t shoot_mode;
-//	uint8_t trigger_mode;
-//	uint8_t chassis_mode;
-//  uint8_t chassis_speed_mode;
-//	int16_t rc_ctrl_r_vx;
-//  int16_t rc_ctrl_r_vy;
-//  int16_t rc_ctrl_l_vx;
-//  int16_t rc_ctrl_l_vy;
-//  float small_yaw_pos;
-//	float yaw;
-//	float mouse_vx;
-//	float mouse_vy;
-//	uint8_t Key_W;
-//	uint8_t Key_S;
-//	uint8_t Key_A;
-//	uint8_t Key_D;
-//	uint8_t tail;
-//}USART_Rx_data_t;
-
+// 发送端数据结构体
 typedef struct
 {
 	uint8_t head;
@@ -111,6 +87,12 @@ typedef struct
 	float initial_speed;
 	float ins_big_yaw;
 	float big_yaw_target;
+	uint16_t shooter_barrel_heat_limit;
+	uint16_t shooter_barrel_cooling_value;
+	uint16_t shooter_17mm_1_barrel_heat;
+	uint16_t chassis_power_limit;
+	float real_power;
+	uint16_t buffer_energy;
 	uint8_t tail;
 }USART_TX_data_t;
 

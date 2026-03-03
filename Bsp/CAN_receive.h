@@ -75,7 +75,7 @@ typedef struct
   uint8_t wireless_state;//当前无线充电状况
   uint8_t cap_wrong_code;//电容错误码
   cap_state_t cap_state;//当前电容情况
-  float real_power;//当前真实功率
+  float real_power;//当前真实功率（反馈到裁判端的）
   float cap_v;//超电电压
     float cap_c;//电容电流
     float dcdc_c;

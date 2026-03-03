@@ -32,7 +32,7 @@ void StartVOFATask(void const * argument)
   {
 		//Vofa_Send_Data8(USART_Rx_data.mode.bits.gimbal_mode,CHASSIS.V[0],USART_Rx_data.key.bits.Key_W,CHASSIS.Vx,GIMBAL.big_yaw_target,yuuuuu,GIMBAL.big_yaw_target,CHASSIS.front_set_num);
 		//Vofa_Send_Data8(pid_big_yaw_angle_fold.set,pid_big_yaw_angle_fold.ref,pid_big_yaw_angle_fold.out,pid_big_yaw_speed_fold.set,pid_big_yaw_speed_fold.ref,pid_big_yaw_speed_fold.out,GIMBAL.big_yaw_target,INS.Yaw);
-		Vofa_Send_Data8(SuperCAP.real_power,SuperCAP.cap_v,PowerState_control,chassis_motor[RL].speed_rpm,powerlimit.referee_max_power,USART_Rx_data.mode.bits.chassis_speed_mode,0,0);
+		//Vofa_Send_Data8(SuperCAP.real_power,pm_power,PowerState_control,chassis_motor[RL].speed_rpm,powerlimit.referee_max_power,USART_Rx_data.mode.bits.chassis_speed_mode,0,0);
 		
 		vTaskDelay(10);
   }
