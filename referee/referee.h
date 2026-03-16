@@ -15,7 +15,7 @@
 #include "main.h"
 
 #include "protocol.h"
-
+#include <stdbool.h>
 typedef enum
 {
     RED_HERO = 1,
@@ -883,4 +883,11 @@ uint32_t Report_Shoot_NUM(void);
 
 extern void get_shoot_heat0_limit_and_heat0(uint16_t *heat0_limit, uint16_t *heat0);
 extern void get_shoot_heat1_limit_and_heat1(uint16_t *heat1_limit, uint16_t *heat1);
+bool Report_IF_Gimbal_work(void);
+bool Report_IF_Chassis_work(void);
+float Report_RealShootSpeed(void);
+bool Report_IF_ArmorBooster_work(void);
+uint16_t Report_Shoot_Heat(void);
+uint16_t Report_CoolingLimit(void);
+
 #endif

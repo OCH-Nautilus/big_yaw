@@ -15,7 +15,7 @@
 #include "stdio.h"
 #include "CRC8_CRC16.h"
 #include "protocol.h"
-
+#include <stdbool.h>
 // 裁判系统数据
 frame_header_struct_t referee_receive_header;
 frame_header_struct_t referee_send_header;
@@ -402,5 +402,58 @@ uint32_t Report_Shoot_NUM(void)
 	last_speed=now_speed;
 	return SHOOT_NUM_1;
 }
+
+/*Gimbal是否断电*/
+bool Report_IF_Gimbal_work(void)
+{
+  bool res = false;
+  if(robot_status.power_management_gimbal_output == 1)
+    res = true;
+  else 
+		res = false;
+  return res;
+}
+
+/*Chassis是否断电*/
+bool Report_IF_Chassis_work(void)
+{
+  bool res = false;
+  if(robot_status.power_management_chassis_output == 1)
+    res = true;
+  else 
+	res = false;
+  return res;
+}
+
+/*返回射速，单位m/s*/
+float Report_RealShootSpeed(void)
+{
+	return shoot_data.initial_speed;
+}
+
+
+/*发弹机构是否断电*/
+bool Report_IF_ArmorBooster_work(void)
+{
+  bool res;
+  if(robot_status.power_management_shooter_output == 1)
+    res = true;
+  else res = false;
+  //if(!IF_MASTER_DOWN_CONNECT)res = true;//无连接默认电源正常
+  return res;
+}
+
+/*返回机器人射击热量*/
+uint16_t Report_Shoot_Heat(void)
+{
+  return power_heat_data.shooter_17mm_barrel_heat;
+}
+
+/*机器人射击热量上限制*/
+uint16_t Report_CoolingLimit(void)
+{
+  return robot_status.shooter_barrel_heat_limit;
+}
+
 
 

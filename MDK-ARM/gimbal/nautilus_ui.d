@@ -43,3 +43,7 @@ gimbal\nautilus_ui.o: ../Inc/usart.h
 gimbal\nautilus_ui.o: ../Inc/main.h
 gimbal\nautilus_ui.o: ../referee/CRC8_CRC16.h
 gimbal\nautilus_ui.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+gimbal\nautilus_ui.o: ../referee/referee.h
+gimbal\nautilus_ui.o: ../referee/protocol.h
+gimbal\nautilus_ui.o: ../referee/struct_typedef.h
+gimbal\nautilus_ui.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h

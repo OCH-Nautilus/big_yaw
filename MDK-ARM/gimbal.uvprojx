@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,ARM_MATH_CM4</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Bsp;../Components;../arm;../Components/Algorithm;../Components/Algorithm/Include;../Components/Controller;../Components/Devices;../referee;../SuperCAP;../vofa+;../task</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Bsp;../Components;../arm;../Components/Algorithm;../Components/Algorithm/Include;../Components/Controller;../Components/Devices;../referee;../SuperCAP;../vofa+;../task;../UI</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1387,6 +1387,21 @@
               <FileName>big_gimbal_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\task\big_gimbal_task.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ui</GroupName>
+          <Files>
+            <File>
+              <FileName>Nautilus_UI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\UI\Nautilus_UI.c</FilePath>
+            </File>
+            <File>
+              <FileName>Steering_UI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\UI\Steering_UI.c</FilePath>
             </File>
           </Files>
         </Group>

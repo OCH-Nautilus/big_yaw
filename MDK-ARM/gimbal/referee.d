@@ -41,6 +41,7 @@ gimbal\referee.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 gimbal\referee.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
 gimbal\referee.o: ..\referee\protocol.h
 gimbal\referee.o: ..\referee\struct_typedef.h
+gimbal\referee.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 gimbal\referee.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 gimbal\referee.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 gimbal\referee.o: ..\referee\CRC8_CRC16.h

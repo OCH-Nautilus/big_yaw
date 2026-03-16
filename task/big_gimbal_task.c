@@ -108,7 +108,7 @@ void gimbal_pid_calc()
         case GIMBAL_NORMAL:
 //            if(USART_Rx_data.mode.bits.controls_mode == CONTROL_RC_CTRL)
 //            {
-                PID_calc(&pid_big_yaw_angle, 0, yaw_error);
+                PID_calc(&pid_big_yaw_angle, 0, yaw_error);//与fold不同应该是因为这里的error是目标角度的取反，最后算出来的out就是一样的，要改成和fold一样的就改成GIMBAL.big_yaw_target=INS.Yaw+GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.01f;
                 GIMBAL.big_yaw_output = PID_calc(&pid_big_yaw_speed, -INS.Gyro[2], pid_big_yaw_angle.out);
 //            }
 //            else // KEY_ctrl
@@ -144,7 +144,7 @@ void gimbal_pid_calc()
                     
                 case VISION_CLOSE:
                     PID_calc(&pid_big_yaw_angle, 0, yaw_error);
-                    GIMBAL.big_yaw_output = PID_calc(&pid_big_yaw_speed, INS.Gyro[2], pid_big_yaw_angle.out);
+                    GIMBAL.big_yaw_output = PID_calc(&pid_big_yaw_speed, -INS.Gyro[2], pid_big_yaw_angle.out);
                     break;
                     
                 default:
@@ -198,10 +198,29 @@ void gimbal_mode_rc_idle()
 
 void gimbal_mode_rc_normal()
 {	
-	//大yaw控制逻辑
-	GIMBAL.ratio_yaw = (zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f)))/(YAW_LIMIT_ANGLE/3.14f*180.0f/2);
+	GIMBAL.ratio_yaw = (zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f)))/(YAW_LIMIT_ANGLE/3.14f*180.0f/3.0f);
 	if(big_yaw.ERR==1)
 		GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.5f;
+	
+	
+//	//大yaw控制逻辑
+//	if(USART_Rx_data.mode.bits.chassis_mode==CHASSIS_TOP)
+//	{
+//		GIMBAL.ratio_yaw = zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f));
+//		GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.01f;
+//	}
+//	else if(USART_Rx_data.mode.bits.chassis_mode==CHASSIS_FOLLOW)
+//	{
+//		GIMBAL.ratio_yaw = zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f));
+//		GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.01f;
+//	}
+//	else
+//	{
+//		GIMBAL.ratio_yaw = (zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f)))/(YAW_LIMIT_ANGLE/3.14f*180.0f/2);
+//		if(big_yaw.ERR==1)
+//			GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.5f;
+//	}
+//	
 	
 	GIMBAL.big_yaw_target=zero_180(GIMBAL.big_yaw_target);
 
@@ -213,10 +232,28 @@ void gimbal_mode_rc_vision()
 {
 
 	//大yaw控制逻辑
-	GIMBAL.ratio_yaw = (zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f)))/(YAW_LIMIT_ANGLE/3.14f*180.0f/2.0f);
+	
+	GIMBAL.ratio_yaw = (zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f)))/(YAW_LIMIT_ANGLE/3.14f*180.0f/2.7f);
 	//if(big_yaw.ERR==1&&GIMBAL.big_yaw_vision_control_flag==1)
 		GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.5f;
 
+//	if(USART_Rx_data.mode.bits.chassis_mode==CHASSIS_TOP)
+//	{
+//		GIMBAL.ratio_yaw = zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f));
+//		GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.005f;
+//	}
+//	else if(USART_Rx_data.mode.bits.chassis_mode==CHASSIS_FOLLOW)
+//	{
+//		GIMBAL.ratio_yaw = zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f));
+//		GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.005f;
+//	}
+//	else
+//	{
+//		GIMBAL.ratio_yaw = (zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f)))/(YAW_LIMIT_ANGLE/3.14f*180.0f/2);
+//		if(big_yaw.ERR==1)
+//			GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.5f;
+//	}
+	
 	GIMBAL.big_yaw_target=zero_180(GIMBAL.big_yaw_target);
 }
 
@@ -265,9 +302,29 @@ int a111=0;
 void gimbal_mode_key_normal()
 {
 	
-	GIMBAL.ratio_yaw = (zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f)))/(YAW_LIMIT_ANGLE/3.14f*180.0f/2.5f);
-	GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*1.0f;
+//	GIMBAL.ratio_yaw = (zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f)))/(YAW_LIMIT_ANGLE/3.14f*180.0f/2.5f);
+//	GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*1.0f;
 	
+	GIMBAL.ratio_yaw = (zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f)))/(YAW_LIMIT_ANGLE/3.14f*180.0f/3.0f);
+	if(big_yaw.ERR==1)
+		GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.5f;
+	
+//	if(USART_Rx_data.mode.bits.chassis_mode==CHASSIS_TOP)
+//	{
+//		GIMBAL.ratio_yaw = zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f));
+//		GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.01f;
+//	}
+//	else if(USART_Rx_data.mode.bits.chassis_mode==CHASSIS_FOLLOW)
+//	{
+//		GIMBAL.ratio_yaw = zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f));
+//		GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.01f;
+//	}
+//	else
+//	{
+//		GIMBAL.ratio_yaw = (zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f)))/(YAW_LIMIT_ANGLE/3.14f*180.0f/2);
+//		if(big_yaw.ERR==1)
+//			GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.5f;
+//	}
 		turn_round();
 
 	GIMBAL.big_yaw_target=zero_180(GIMBAL.big_yaw_target);
@@ -275,10 +332,26 @@ void gimbal_mode_key_normal()
 
 void gimbal_mode_key_vision()
 {
-	GIMBAL.ratio_yaw = (zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f)))/(YAW_LIMIT_ANGLE/3.14f*180.0f/2.0f);
+	GIMBAL.ratio_yaw = (zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f)))/(YAW_LIMIT_ANGLE/3.14f*180.0f/2.7f);
 	//if(big_yaw.ERR==1&&GIMBAL.big_yaw_vision_control_flag==1)
 		GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.5f;
-
+//	if(USART_Rx_data.mode.bits.chassis_mode==CHASSIS_TOP)
+//	{
+//		GIMBAL.ratio_yaw = zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f));
+//		GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.01f;
+//	}
+//	else if(USART_Rx_data.mode.bits.chassis_mode==CHASSIS_FOLLOW)
+//	{
+//		GIMBAL.ratio_yaw = zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f));
+//		GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.01f;
+//	}
+//	else
+//	{
+//		GIMBAL.ratio_yaw = (zero_180((USART_Rx_data.small_yaw_pos/3.14f*180.0f)-(FOLD_SMALL_YAW_ANGLE/3.14f*180.0f)))/(YAW_LIMIT_ANGLE/3.14f*180.0f/2);
+//		if(big_yaw.ERR==1)
+//			GIMBAL.big_yaw_target=INS.Yaw-GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*GIMBAL.ratio_yaw*0.5f;
+//	}
+	
 	GIMBAL.big_yaw_target=zero_180(GIMBAL.big_yaw_target);
 }
 

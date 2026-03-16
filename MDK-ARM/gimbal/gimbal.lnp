@@ -75,6 +75,8 @@
 "gimbal\ins_task.o"
 "gimbal\send_current_task.o"
 "gimbal\big_gimbal_task.o"
+"gimbal\nautilus_ui.o"
+"gimbal\steering_ui.o"
 --strict --scatter "gimbal\gimbal.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

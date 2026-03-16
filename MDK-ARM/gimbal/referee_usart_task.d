@@ -48,6 +48,7 @@ gimbal\referee_usart_task.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 gimbal\referee_usart_task.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 gimbal\referee_usart_task.o: ..\referee\protocol.h
 gimbal\referee_usart_task.o: ..\referee\referee.h
+gimbal\referee_usart_task.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 gimbal\referee_usart_task.o: ../Inc/usart.h
 gimbal\referee_usart_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 gimbal\referee_usart_task.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h

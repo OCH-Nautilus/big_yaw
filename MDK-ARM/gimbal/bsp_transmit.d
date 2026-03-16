@@ -72,5 +72,7 @@ gimbal\bsp_transmit.o: ../task/chassis_task.h
 gimbal\bsp_transmit.o: ../referee/referee.h
 gimbal\bsp_transmit.o: ../referee/protocol.h
 gimbal\bsp_transmit.o: ../referee/struct_typedef.h
+gimbal\bsp_transmit.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 gimbal\bsp_transmit.o: ../task/big_gimbal_task.h
 gimbal\bsp_transmit.o: ../Bsp/pid.h
+gimbal\bsp_transmit.o: ../SuperCAP/chassis_power.h

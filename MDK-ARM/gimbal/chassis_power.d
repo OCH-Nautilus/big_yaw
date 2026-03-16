@@ -47,6 +47,7 @@ gimbal\chassis_power.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex
 gimbal\chassis_power.o: ../referee/referee.h
 gimbal\chassis_power.o: ../referee/protocol.h
 gimbal\chassis_power.o: ../referee/struct_typedef.h
+gimbal\chassis_power.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 gimbal\chassis_power.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 gimbal\chassis_power.o: ../task/chassis_task.h
 gimbal\chassis_power.o: ../Bsp/pid.h

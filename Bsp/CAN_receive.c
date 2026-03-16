@@ -16,7 +16,7 @@ float pm_voltage = 0, pm_current = 0, pm_power;
  * @param
  */
 int wwwqq = 0,
-	qqxx = 0;
+	qqxx = 0,AA11=0,BB=0,CC=0,DD=0;
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
 
@@ -26,17 +26,21 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 	switch (rx_header.StdId)
 	{
 
-	case 0x201:
-		chassis_motor[RL].msg_cnt++ <= 50 ? get_moto_offset(&chassis_motor[RL], rx_data) : encoder_data_handle(&chassis_motor[RL], rx_data);
-		break;
-	case 0x202:
-		chassis_motor[FR].msg_cnt++ <= 50 ? get_moto_offset(&chassis_motor[FR], rx_data) : encoder_data_handle(&chassis_motor[FR], rx_data);
-		break;
-	case 0x203:
-		chassis_motor[FL].msg_cnt++ <= 50 ? get_moto_offset(&chassis_motor[FL], rx_data) : encoder_data_handle(&chassis_motor[FL], rx_data);
-		break;
-	case 0x204:
+	case 0x201://右后1
 		chassis_motor[RR].msg_cnt++ <= 50 ? get_moto_offset(&chassis_motor[RR], rx_data) : encoder_data_handle(&chassis_motor[RR], rx_data);
+	AA11++;
+		break;
+	case 0x202://左后0
+		chassis_motor[RL].msg_cnt++ <= 50 ? get_moto_offset(&chassis_motor[RL], rx_data) : encoder_data_handle(&chassis_motor[RL], rx_data);
+	BB++;
+		break;
+	case 0x203://左前3
+		chassis_motor[FL].msg_cnt++ <= 50 ? get_moto_offset(&chassis_motor[FL], rx_data) : encoder_data_handle(&chassis_motor[FL], rx_data);
+	CC++;
+		break;
+	case 0x204://右前2
+		chassis_motor[FR].msg_cnt++ <= 50 ? get_moto_offset(&chassis_motor[FR], rx_data) : encoder_data_handle(&chassis_motor[FR], rx_data);
+	DD++;
 		break;
 	case 0x212:
 	{qqxx++;

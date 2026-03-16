@@ -54,6 +54,7 @@ gimbal\vofa.o: ../Inc/usart.h
 gimbal\vofa.o: ../referee/referee.h
 gimbal\vofa.o: ../referee/protocol.h
 gimbal\vofa.o: ../referee/struct_typedef.h
+gimbal\vofa.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 gimbal\vofa.o: ../task/big_gimbal_task.h
 gimbal\vofa.o: ../Bsp/pid.h
 gimbal\vofa.o: ../task/ins_task.h
@@ -67,9 +68,11 @@ gimbal\vofa.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 gimbal\vofa.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 gimbal\vofa.o: ../task/ins_task.h
 gimbal\vofa.o: ../task/chassis_task.h
-gimbal\vofa.o: ../Bsp/bsp_transmit.h
-gimbal\vofa.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 gimbal\vofa.o: ../Bsp/CAN_receive.h
 gimbal\vofa.o: ../Inc/can.h
+gimbal\vofa.o: ../Bsp/bsp_transmit.h
+gimbal\vofa.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 gimbal\vofa.o: ../Bsp/config.h
 gimbal\vofa.o: ../SuperCAP/chassis_power.h
+gimbal\vofa.o: ../SuperCAP/SuperCAP.h
+gimbal\vofa.o: ../Bsp/bsp_can.h

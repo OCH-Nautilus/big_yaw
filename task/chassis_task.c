@@ -13,6 +13,10 @@ CHASSIS_t CHASSIS;
 pid_type_def speed[4];
 pid_type_def pid_yaw_follow;
 
+int16_t motor_current_lost[4]={0,0,0,0};
+int32_t motor_current_time[4]={0,0,0,0};
+
+
 /**
  * @brief 底盘总任务
  * @note
@@ -28,12 +32,8 @@ void chassis_task(void const *argument)
 		chassis_assignment(&CHASSIS);
 		chassis_speed_calc(&CHASSIS, 1);
 		chassis_current_calc(&CHASSIS);
-#ifdef CHASSIS_SENT
-		chassis_ctrl_current();
-#else
-		Error_Chassis();
-#endif
 
+		motor_current_up(chassis_motor,motor_current_lost,motor_current_time);
 		vTaskDelay(1);
 	}
 }
@@ -78,26 +78,26 @@ void chassis_assignment(CHASSIS_t *ch)
 	{aaa++;
 		if (USART_Rx_data.mode.bits.controls_mode == CONTROL_RC_CTRL) // 遥控器控制
 		{
-			ch->Vx = -USART_Rx_data.rc_ctrl_r_vy * SENSITIVITY_CHASSIS_RC_X;
-			ch->Vy = -USART_Rx_data.rc_ctrl_r_vx * SENSITIVITY_CHASSIS_RC_Y;
+			ch->Vx = USART_Rx_data.rc_ctrl_r_vy * SENSITIVITY_CHASSIS_RC_X;
+			ch->Vy =- USART_Rx_data.rc_ctrl_r_vx * SENSITIVITY_CHASSIS_RC_Y;
 		}
 		else 
 		{
-			ch->Vx = -(USART_Rx_data.key.bits.Key_S - USART_Rx_data.key.bits.Key_W) * speed_limit_key() * 2.0f;
-			ch->Vy = -(USART_Rx_data.key.bits.Key_A - USART_Rx_data.key.bits.Key_D) * speed_limit_key() * 2.0f;
+			ch->Vx =- (USART_Rx_data.key.bits.Key_S - USART_Rx_data.key.bits.Key_W) * 7000;//speed_limit_key() * 2.0f
+			ch->Vy = (USART_Rx_data.key.bits.Key_A - USART_Rx_data.key.bits.Key_D) * 7000;//speed_limit_key() * 2.0f
 		}
 	}
 	else
 	{
 		if (USART_Rx_data.mode.bits.controls_mode == CONTROL_RC_CTRL) 
 		{
-			ch->Vx = USART_Rx_data.rc_ctrl_r_vy * SENSITIVITY_CHASSIS_RC_X;
+			ch->Vx = -USART_Rx_data.rc_ctrl_r_vy * SENSITIVITY_CHASSIS_RC_X;
 			ch->Vy = USART_Rx_data.rc_ctrl_r_vx * SENSITIVITY_CHASSIS_RC_Y;
 		}
 		else 
 		{
-			ch->Vx = (USART_Rx_data.key.bits.Key_W - USART_Rx_data.key.bits.Key_S) * speed_limit_key() * 2.0f;
-			ch->Vy = (USART_Rx_data.key.bits.Key_D - USART_Rx_data.key.bits.Key_A) * speed_limit_key() * 2.0f;
+			ch->Vx = -(USART_Rx_data.key.bits.Key_W - USART_Rx_data.key.bits.Key_S) * 7000;//speed_limit_key() * 2.0f
+			ch->Vy = (USART_Rx_data.key.bits.Key_D - USART_Rx_data.key.bits.Key_A) * 7000;//speed_limit_key() * 2.0f;
 		}
 	}
 }
@@ -108,11 +108,34 @@ void chassis_assignment(CHASSIS_t *ch)
  * @param
  */
 float yaw_angle = 0;//此时大小yaw的叠加角度
+//void chassis_ecdz()
+//{
 
-void chassis_ecdz()//计算底盘与目标方向差值,底盘正方向需要重新标定
+//	yaw_angle = big_yaw.Angle;
+//	if (yaw_angle > 180.0f)
+//		yaw_angle -= 360.0f;
+//	else if (yaw_angle < -180.0f)
+//		yaw_angle += 360.0f;
+
+//	CHASSIS.crd = yaw_angle - CHASSIS.front_set[CHASSIS.front_set_num];
+
+//	if (CHASSIS.crd > 180.0f)
+//		CHASSIS.crd -= 360.0f;
+//	else if (CHASSIS.crd < -180.0f)
+//		CHASSIS.crd += 360.0f;
+
+//	CHASSIS.diff_angle = -CHASSIS.crd / 360 * 2 * 3.1415926f;
+
+//	if (USART_Rx_data.mode.bits.chassis_mode == CHASSIS_FOLLOW)
+//		CHASSIS.Vz = PID_calc(&pid_yaw_follow, CHASSIS.crd, 0);
+//	if (USART_Rx_data.mode.bits.chassis_mode == CHASSIS_TOP)
+//		CHASSIS.Vz = 4000;//speed_limit_top() * CHASSIS.Rotate_direction;
+//}
+
+void chassis_ecdz()
 {
 
-	yaw_angle =USART_Rx_data.small_yaw_pos * 180 / 3.14159f-big_yaw.Angle;
+	yaw_angle = USART_Rx_data.small_yaw_pos/3.14f*180-big_yaw.Angle;
 	if (yaw_angle > 180.0f)
 		yaw_angle -= 360.0f;
 	else if (yaw_angle < -180.0f)
@@ -126,10 +149,11 @@ void chassis_ecdz()//计算底盘与目标方向差值,底盘正方向需要重新标定
 		CHASSIS.crd += 360.0f;
 
 	CHASSIS.diff_angle = CHASSIS.crd / 360 * 2 * 3.1415926f;
+
 	if (USART_Rx_data.mode.bits.chassis_mode == CHASSIS_FOLLOW)
-		CHASSIS.Vz = PID_calc(&pid_yaw_follow, CHASSIS.crd, 0);
-	else if (USART_Rx_data.mode.bits.chassis_mode == CHASSIS_TOP)
-		CHASSIS.Vz = speed_limit_top() * CHASSIS.Rotate_direction;
+		CHASSIS.Vz = PID_calc(&pid_yaw_follow, -CHASSIS.crd, 0);
+	if (USART_Rx_data.mode.bits.chassis_mode == CHASSIS_TOP)
+		CHASSIS.Vz = 4000;//speed_limit_top() * CHASSIS.Rotate_direction;
 }
 
 /**
@@ -138,37 +162,12 @@ void chassis_ecdz()//计算底盘与目标方向差值,底盘正方向需要重新标定
  * @param
  */float big_yaw_to_chassis_angle;
 float small_yaw_to_big_yaw_angle;
-void chassis_speed_calc(CHASSIS_t *ch, int16_t mode)
-{
-	small_yaw_to_big_yaw_angle=USART_Rx_data.small_yaw_pos-FOLD_SMALL_YAW_ANGLE;
-	big_yaw_to_chassis_angle=big_yaw._pos-BIG_YAW_CHASSIS_ANGLE;
-	if (mode == 1)
-	{
-		ch->Vx2 = (ch->Vx * cos(small_yaw_to_big_yaw_angle) + ch->Vy * sin(small_yaw_to_big_yaw_angle));
-		ch->Vy2 = (ch->Vy * cos(small_yaw_to_big_yaw_angle) - ch->Vx * sin(small_yaw_to_big_yaw_angle));
 
-
-		
-		// 全向底盘
-		double a = 0;
-		double b = 0;
-		double c = 0;
-		a = (0.785385f - big_yaw_to_chassis_angle);
-		b = (0.785385f + big_yaw_to_chassis_angle);
-		c = a;
-		
-		
-		ch->V[RR] = +(cos(a) * ch->Vx2) + (sin(a) * ch->Vy2) - ch->Vz;//相对于大yaw的速度
-		ch->V[FR] = +(cos(b) * ch->Vx2) - (sin(b) * ch->Vy2) - ch->Vz;
-		ch->V[RL] = -(cos(c) * ch->Vx2) - (sin(c) * ch->Vy2) - ch->Vz;
-		ch->V[FL] = -(cos(b) * ch->Vx2) + (sin(b) * ch->Vy2) - ch->Vz;
-	}
-}
 
 //void chassis_speed_calc(CHASSIS_t *ch, int16_t mode)
 //{
-//	ch->Vx2 = limit_add_speed(ch->Vx2, ch->Vx);
-//	ch->Vy2 = limit_add_speed(ch->Vy2, ch->Vy);
+//	CHASSIS.Vx2 = limit_add_speed(CHASSIS.Vx2, CHASSIS.Vx);
+//	CHASSIS.Vy2 = limit_add_speed(CHASSIS.Vy2, CHASSIS.Vy);
 
 //	if (mode == 0) // mode0麦轮 mode1全向轮
 //	{
@@ -190,16 +189,34 @@ void chassis_speed_calc(CHASSIS_t *ch, int16_t mode)
 //		a = (0.785385f - ch->diff_angle);
 //		b = (0.785385f + ch->diff_angle);
 //		c = a;
-////		ch->V[FR] = +cos(a) * ch->Vx2 + sin(a) * ch->Vy2 - ch->Vz;
-////		ch->V[RR] = +cos(b) * ch->Vx2 - sin(b) * ch->Vy2 - ch->Vz;
-////		ch->V[RL] = -cos(c) * ch->Vx2 - sin(c) * ch->Vy2 - ch->Vz;
-////		ch->V[FL] = -cos(b) * ch->Vx2 + sin(b) * ch->Vy2 - ch->Vz;
-//		ch->V[RR] = +cos(a) * ch->Vx2 + sin(a) * ch->Vy2 - ch->Vz;
-//		ch->V[FR] = +cos(b) * ch->Vx2 - sin(b) * ch->Vy2 - ch->Vz;
-//		ch->V[RL] = -cos(c) * ch->Vx2 - sin(c) * ch->Vy2 - ch->Vz;
-//		ch->V[FL] = -cos(b) * ch->Vx2 + sin(b) * ch->Vy2 - ch->Vz;
+//		ch->V[FR] = +cos(a) * ch->Vx2 + sin(a) * ch->Vy2 + ch->Vz;
+//		ch->V[RR] = +cos(b) * ch->Vx2 - sin(b) * ch->Vy2 + ch->Vz;
+//		ch->V[RL] = -cos(c) * ch->Vx2 - sin(c) * ch->Vy2 + ch->Vz;
+//		ch->V[FL] = -cos(b) * ch->Vx2 + sin(b) * ch->Vy2 + ch->Vz;
 //	}
 //}
+
+void chassis_speed_calc(CHASSIS_t *ch, int16_t mode)
+{
+	CHASSIS.Vx2 = limit_add_speed(CHASSIS.Vx2, CHASSIS.Vx);
+	CHASSIS.Vy2 = limit_add_speed(CHASSIS.Vy2, CHASSIS.Vy);
+
+if (mode == 1)
+	{
+		// 全向底盘
+		double a = 0;
+		double b = 0;
+		double c = 0;
+		a = (0.785385f - ch->diff_angle);
+		b = (0.785385f + ch->diff_angle);
+		c = a;
+		ch->V[FR] = +cos(a) * ch->Vx2 + sin(a) * ch->Vy2 + ch->Vz;
+		ch->V[RR] = +cos(b) * ch->Vx2 - sin(b) * ch->Vy2 + ch->Vz;
+		ch->V[RL] = -cos(c) * ch->Vx2 - sin(c) * ch->Vy2 + ch->Vz;
+		ch->V[FL] = -cos(b) * ch->Vx2 + sin(b) * ch->Vy2 + ch->Vz;
+	}
+}
+
 /**
  * @brief 底盘pid计算
  * @note
@@ -601,3 +618,16 @@ float speed_limit_key(void)
 	return CHASSIS.limit_speed;
 }
 
+//底盘电机状态更新
+void motor_current_up(moto_measure_t *motor_data,int16_t *motor_current_lost,int32_t *motor_current_time) {
+   
+    for(int i=0;i<4;i++){
+        if(chassis_motor[i].given_current==motor_current_lost[i]) 
+					motor_current_time[i]++;
+        else
+				{
+            motor_current_time[i]=0;
+            motor_current_lost[i]=chassis_motor[i].given_current;
+        }
+    }
+}

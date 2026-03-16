@@ -17,17 +17,32 @@ void send_current_task(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-	enable_disable_DM4310();
-    #ifdef GIMBAL_YAW_SENT
-		yaw_ctrl_current();
-#else
-		Error_Yaw();
-#endif
+		enable_disable_DM4310();
 		
-#ifdef CAP
-		SupPower_Mode_Change();
-#endif
+		if(communication_state==COMMUNICATION_NORMAL)
+		{
+			#ifdef GIMBAL_YAW_SENT
+				yaw_ctrl_current();
+			#else
+					Error_Yaw();
+			#endif
+		}
+    else
+			Error_Yaw();
 		vTaskDelay(1);
+		if(communication_state==COMMUNICATION_NORMAL)
+		{
+			#ifdef CHASSIS_SENT
+				chassis_ctrl_current();
+			#else
+					Error_Chassis();
+			#endif
+		}
+		else
+			Error_Chassis();
+			
+		
+	vTaskDelay(1);
 
   }
   /* USER CODE END current_task */
@@ -73,7 +88,7 @@ void chassis_ctrl_current()
 	if(USART_Rx_data.mode.bits.chassis_mode==CHASSIS_IDLE)
 		set_motor_current(&hcan1,0x200,0,0,0,0); 	
 	else
-	 set_motor_current(&hcan1,0x200,CHASSIS.output[RL], CHASSIS.output[FR], CHASSIS.output[FL], CHASSIS.output[RR]);
+	 set_motor_current(&hcan1,0x200,CHASSIS.output[RR], CHASSIS.output[RL], CHASSIS.output[FL], CHASSIS.output[FR]);
 		
 }
 

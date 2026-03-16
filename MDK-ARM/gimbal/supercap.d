@@ -68,4 +68,5 @@ gimbal\supercap.o: ../task/ins_task.h
 gimbal\supercap.o: ../referee/referee.h
 gimbal\supercap.o: ../referee/protocol.h
 gimbal\supercap.o: ../referee/struct_typedef.h
+gimbal\supercap.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 gimbal\supercap.o: ..\SuperCAP\chassis_power.h

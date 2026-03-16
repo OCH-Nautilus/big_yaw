@@ -108,7 +108,7 @@ int main(void)
   MX_USART6_UART_Init();
   MX_USART1_UART_Init();
   MX_RTC_Init();
-//  MX_USB_OTG_FS_PCD_Init();
+  MX_USB_OTG_FS_PCD_Init();
   /* USER CODE BEGIN 2 */
 	can1_user_init();
 	can2_user_init();

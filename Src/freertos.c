@@ -56,6 +56,7 @@ osThreadId tirggertaskHandle;
 osThreadId detect_taskHandle;
 osThreadId VOFATaskHandle;
 osThreadId myTask09Handle;
+osThreadId UI_TASKHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -71,6 +72,7 @@ void tirgger_task(void const * argument);
 void DETECT_task(void const * argument);
 void StartVOFATask(void const * argument);
 void Transmit_Data_Task(void const * argument);
+void UI_Task(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -146,12 +148,16 @@ void MX_FREERTOS_Init(void) {
   detect_taskHandle = osThreadCreate(osThread(detect_task), NULL);
 
   /* definition and creation of VOFATask */
-osThreadDef(VOFATask, StartVOFATask, osPriorityAboveNormal, 0, 256);
-VOFATaskHandle = osThreadCreate(osThread(VOFATask), NULL);
+  osThreadDef(VOFATask, StartVOFATask, osPriorityAboveNormal, 0, 256);
+  VOFATaskHandle = osThreadCreate(osThread(VOFATask), NULL);
 
   /* definition and creation of myTask09 */
   osThreadDef(myTask09, Transmit_Data_Task, osPriorityAboveNormal, 0, 512);
   myTask09Handle = osThreadCreate(osThread(myTask09), NULL);
+
+  /* definition and creation of UI_TASK */
+  osThreadDef(UI_TASK, UI_Task, osPriorityAboveNormal, 0, 512);
+  UI_TASKHandle = osThreadCreate(osThread(UI_TASK), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -313,16 +319,34 @@ __weak void StartVOFATask(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_Transmit_Data_Task */
-//__weak void Transmit_Data_Task(void const * argument)
-//{
-//  /* USER CODE BEGIN Transmit_Data_Task */
+__weak void Transmit_Data_Task(void const * argument)
+{
+  /* USER CODE BEGIN Transmit_Data_Task */
 //  /* Infinite loop */
 //  for(;;)
 //  {
 //    osDelay(1);
 //  }
-//  /* USER CODE END Transmit_Data_Task */
-//}
+  /* USER CODE END Transmit_Data_Task */
+}
+
+/* USER CODE BEGIN Header_UI_Task */
+/**
+* @brief Function implementing the UI_TASK thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_UI_Task */
+__weak void UI_Task(void const * argument)
+{
+  /* USER CODE BEGIN UI_Task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END UI_Task */
+}
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */

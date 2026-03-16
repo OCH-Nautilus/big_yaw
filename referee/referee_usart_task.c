@@ -53,7 +53,7 @@ unpack_data_t referee_unpack_obj;
   * @brief          裁判系统任务
   * @param[in]      pvParameters: NULL
   * @retval         none
-  */
+  */int qweeq=0;
 void REFEREE_Task(void const *pvParameters)
 {
 	init_referee_struct_data();
@@ -61,7 +61,7 @@ void REFEREE_Task(void const *pvParameters)
 	usart6_init(usart6_buf[0], usart6_buf[1], USART_RX_BUF_LENGHT);
 //	Gyro_DMA_Start();
 	while (1)
-	{
+	{qweeq++;
 		referee_unpack_fifo_data();
 	}
 }

@@ -271,13 +271,9 @@ void TIM2_IRQHandler(void)
 
 /**
   * @brief This function handles USART1 global interrupt.
-  */
-int qzz,uii=0;int yyyu=0,iiio=0;
+  */int qzz;
 void USART1_IRQHandler(void)
-{uii++;
-//			uii++;
-//	yyyu=__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE);
-//	iiio=__HAL_UART_GET_IT_SOURCE(&huart1, UART_IT_IDLE);
+{
   /* USER CODE BEGIN USART1_IRQn 0 */
 if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE) && 
       __HAL_UART_GET_IT_SOURCE(&huart1, UART_IT_IDLE))

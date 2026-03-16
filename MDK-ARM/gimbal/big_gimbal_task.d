@@ -68,8 +68,8 @@ gimbal\big_gimbal_task.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 gimbal\big_gimbal_task.o: ..\task\ins_task.h
 gimbal\big_gimbal_task.o: ../Bsp/lowpass.h
 gimbal\big_gimbal_task.o: ..\task\chassis_task.h
+gimbal\big_gimbal_task.o: ../Bsp/CAN_receive.h
+gimbal\big_gimbal_task.o: ../Inc/can.h
 gimbal\big_gimbal_task.o: ../Bsp/bsp_transmit.h
 gimbal\big_gimbal_task.o: ../Inc/usart.h
 gimbal\big_gimbal_task.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-gimbal\big_gimbal_task.o: ../Bsp/CAN_receive.h
-gimbal\big_gimbal_task.o: ../Inc/can.h
