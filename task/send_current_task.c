@@ -30,16 +30,16 @@ void send_current_task(void const * argument)
     else
 			Error_Yaw();
 		vTaskDelay(1);
-		if(communication_state==COMMUNICATION_NORMAL)
-		{
+//		if(communication_state==COMMUNICATION_NORMAL)
+//		{
 			#ifdef CHASSIS_SENT
 				chassis_ctrl_current();
 			#else
 					Error_Chassis();
 			#endif
-		}
-		else
-			Error_Chassis();
+//		}
+//		else
+//			Error_Chassis();
 			
 		
 	vTaskDelay(1);
@@ -109,22 +109,27 @@ void Error_Chassis()
 
 void enable_disable_DM4310(void)
 {
-	static int16_t dm_cnt=30;
- if (USART_Rx_data.mode.bits.gimbal_mode != GIMBAL_IDLE)
+//	static int enable_cnt=50;
+//	if(USART_Rx_data.mode.bits.gimbal_mode != GIMBAL_IDLE&&enable_cnt>0)
+//	{
+//		 damiao_init(&hcan1, 0x02);
+//		 vTaskDelay(1);
+//		 enable_cnt--;
+//	}
+//	else if(USART_Rx_data.mode.bits.gimbal_mode == GIMBAL_IDLE)
+//	{
+//		 damiao_exit(&hcan1, 0x02);
+//		vTaskDelay(1);
+//		enable_cnt=50;
+//	}
+ if (USART_Rx_data.mode.bits.gimbal_mode != GIMBAL_IDLE&&big_yaw.ERR==0)
  {
-     
-     if (dm_cnt > 0)
-     {
          damiao_init(&hcan1, 0x02);
-         dm_cnt--;
 				 vTaskDelay(1);
-     }
-     
  }
- else
+ if(USART_Rx_data.mode.bits.gimbal_mode == GIMBAL_IDLE||USART_Rx_data.flag.bits.detect_flag==DETECT_NONE)
  {
      damiao_exit(&hcan1, 0x02);
-		dm_cnt=30;
-		vTaskDelay(1);
+		 vTaskDelay(1);
  }
 }

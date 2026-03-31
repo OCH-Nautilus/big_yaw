@@ -112,6 +112,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	can1_user_init();
 	can2_user_init();
+	HAL_GPIO_WritePin(GPIOH,LED_R_Pin,GPIO_PIN_SET);
 	DWT_Init(168);
     while (BMI088_init(&hspi1, 1) != BMI088_NO_ERROR)
         ;

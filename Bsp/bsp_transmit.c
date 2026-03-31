@@ -13,6 +13,7 @@ USART_TX_data_t  USART_TX_data;
 
 uint8_t USART_Rx_data_handle[DATA_COUNT];
 uint8_t USART_Tx_buff[USART_DATA_COUNT] = {0};
+uint8_t vision_color=0;
 communication_state_e communication_state;
 extern float qqq11;
 extern float  pm_power;
@@ -55,7 +56,7 @@ void USART_Data_init(USART_TX_data_t *data_init)
 		
     data_init->head = 0;
     data_init->chassis_diff_angle=0;
-    data_init->trigger_back_over_flag=0;
+    data_init->chassis_if_blackout=0;
     data_init->trigger_weak_flag=0;
     data_init->initial_speed=0;
 		data_init->ins_big_yaw=0;
@@ -72,10 +73,7 @@ void USART_Data_init(USART_TX_data_t *data_init)
 		data_init->chassis_speed_rpm=0;
 		data_init->speed_out=0;
 		data_init->tail = 0;
-		for(int i=0;i<8;i++)
-		{
-			data_init->data[i]=0;
-		}
+		data_init->vision_color=0;
 }
 
 /**
@@ -91,7 +89,11 @@ void USART_Data_Handle(USART_TX_data_t *data)
     {
         return;
     }
-	
+		if(robot_status.robot_id<9)
+			vision_color=1;
+		else
+			vision_color=0;
+		
 		data->head = USART_TX_HAED;
 
 		data->chassis_diff_angle=CHASSIS.diff_angle;
@@ -109,16 +111,8 @@ void USART_Data_Handle(USART_TX_data_t *data)
 		data->chassis_given_current=chassis_motor[2].given_current;
 		data->chassis_speed_rpm=chassis_motor[2].speed_rpm;
 		data->speed_out=chassis_motor[2].given_current;;
-		data->data[0]=powerlimit.set_power;
-		data->data[1]=powerlimit.Min_capEnergy;
-		data->data[2]=powerlimit.capEnergy;
-		data->data[3]=chassis_motor[3].speed_rpm;
-		data->data[4]=chassis_motor[3].given_current;
-		data->data[5]=qqq11;
-		data->data[6]=power_heat_data.buffer_energy;
-		data->data[7]=chassis_motor[3].ecd;
-		
-		
+		data->chassis_if_blackout=chassis_if_blackout();
+		data->vision_color=vision_color;
 		
     data->tail = USART_TX_END;
 		
@@ -144,7 +138,7 @@ void USART_Data_Send( USART_TX_data_t *data , uint8_t *buff)
 		
 	  memcpy( buff,  &data->head,1 );
 	  memcpy( buff+1, &data->chassis_diff_angle , 4 );
-    memcpy( buff+5, &data->trigger_back_over_flag , 1 );
+    memcpy( buff+5, &data->chassis_if_blackout , 1 );
     memcpy( buff+6, &data->trigger_weak_flag , 1 );
     memcpy( buff+7, &data->initial_speed , 4 );
 		memcpy( buff+11, &data->ins_big_yaw , 4 );
@@ -161,8 +155,8 @@ void USART_Data_Send( USART_TX_data_t *data , uint8_t *buff)
 		memcpy( buff+41, &data->speed_out, 2 );
 		memcpy( buff+43, &data->chassis_given_current , 2 );
 		memcpy( buff+45, &data->chassis_speed_rpm, 2 );
-		memcpy( buff+47, &data->data, 32 );
-		memcpy( buff+79, &data->tail , 1 );
+		memcpy( buff+47, &data->vision_color , 1 );
+		memcpy( buff+48, &data->tail , 1 );
 		
 		HAL_UART_Transmit_DMA(&huart1,buff,USART_DATA_COUNT);
 }

@@ -83,8 +83,8 @@ void chassis_assignment(CHASSIS_t *ch)
 		}
 		else 
 		{
-			ch->Vx =- (USART_Rx_data.key.bits.Key_S - USART_Rx_data.key.bits.Key_W) * 7000;//speed_limit_key() * 2.0f
-			ch->Vy = (USART_Rx_data.key.bits.Key_A - USART_Rx_data.key.bits.Key_D) * 7000;//speed_limit_key() * 2.0f
+			ch->Vx =- (USART_Rx_data.key.bits.Key_S - USART_Rx_data.key.bits.Key_W) * speed_limit_key() * 2.0f;//speed_limit_key() * 2.0f
+			ch->Vy = (USART_Rx_data.key.bits.Key_A - USART_Rx_data.key.bits.Key_D) * speed_limit_key() * 2.0f;//speed_limit_key() * 2.0f
 		}
 	}
 	else
@@ -96,8 +96,8 @@ void chassis_assignment(CHASSIS_t *ch)
 		}
 		else 
 		{
-			ch->Vx = -(USART_Rx_data.key.bits.Key_W - USART_Rx_data.key.bits.Key_S) * 7000;//speed_limit_key() * 2.0f
-			ch->Vy = (USART_Rx_data.key.bits.Key_D - USART_Rx_data.key.bits.Key_A) * 7000;//speed_limit_key() * 2.0f;
+			ch->Vx = -(USART_Rx_data.key.bits.Key_W - USART_Rx_data.key.bits.Key_S) * speed_limit_key() * 2.0f;//speed_limit_key() * 2.0f
+			ch->Vy = (USART_Rx_data.key.bits.Key_D - USART_Rx_data.key.bits.Key_A) * speed_limit_key() * 2.0f;//speed_limit_key() * 2.0f;
 		}
 	}
 }
@@ -134,14 +134,15 @@ float yaw_angle = 0;//此时大小yaw的叠加角度
 
 void chassis_ecdz()
 {
-
+	static int16_t top_speed_cnt=0;
+	static uint8_t top_speed_flag=0;
 	yaw_angle = USART_Rx_data.small_yaw_pos/3.14f*180-big_yaw.Angle;
 	if (yaw_angle > 180.0f)
 		yaw_angle -= 360.0f;
 	else if (yaw_angle < -180.0f)
 		yaw_angle += 360.0f;
 
-	CHASSIS.crd = yaw_angle - CHASSIS.front_set[CHASSIS.front_set_num];
+	CHASSIS.crd = yaw_angle - CHASSIS.front_set[CHASSIS.front_set_num];;//
 
 	if (CHASSIS.crd > 180.0f)
 		CHASSIS.crd -= 360.0f;
@@ -153,7 +154,65 @@ void chassis_ecdz()
 	if (USART_Rx_data.mode.bits.chassis_mode == CHASSIS_FOLLOW)
 		CHASSIS.Vz = PID_calc(&pid_yaw_follow, -CHASSIS.crd, 0);
 	if (USART_Rx_data.mode.bits.chassis_mode == CHASSIS_TOP)
-		CHASSIS.Vz = 4000;//speed_limit_top() * CHASSIS.Rotate_direction;
+	{
+		switch(USART_Rx_data.flag.bits.top_mode)
+		{
+			case 0:
+				if(USART_Rx_data.flag.bits.rotate_direction==1)
+					CHASSIS.Vz = speed_limit_top() ;
+				else
+					CHASSIS.Vz = -speed_limit_top() ;
+			break;
+			case 1:
+				if(USART_Rx_data.flag.bits.rotate_direction==1)
+				{
+					CHASSIS.Vz = speed_limit_top() +2000*cosf(2*3.14159f*((float)HAL_GetTick()/2000.0f));
+					if(CHASSIS.Vz<4000.0f)
+						CHASSIS.Vz=4000.0f;
+				}
+				else
+				{
+					CHASSIS.Vz = -speed_limit_top() +2000*cosf(2*3.14159f*((float)HAL_GetTick()/2000.0f));
+					if(CHASSIS.Vz>-4000.0f)
+						CHASSIS.Vz=-4000.0f;
+				}
+			break;
+			case 2://变速					
+				if(top_speed_flag==0)
+					top_speed_cnt++;
+				else
+					top_speed_cnt--;
+				
+				if (top_speed_cnt>1000)
+				{
+					top_speed_cnt=1000;
+					top_speed_flag=1;
+				}
+				else if(top_speed_cnt<0)
+				{
+					top_speed_cnt=0;
+					top_speed_flag=0;
+				}
+				//z轴速度给定
+				if(USART_Rx_data.flag.bits.rotate_direction==1&&top_speed_flag)
+					CHASSIS.Vz = speed_limit_top() +1000;
+				else if(USART_Rx_data.flag.bits.rotate_direction==1&&top_speed_flag==0)
+					CHASSIS.Vz = speed_limit_top() ;
+				else if(USART_Rx_data.flag.bits.rotate_direction==0&&top_speed_flag)
+					CHASSIS.Vz = -(speed_limit_top()+1000);
+				else if(USART_Rx_data.flag.bits.rotate_direction==0&&top_speed_flag==0)
+					CHASSIS.Vz = -speed_limit_top();
+			break;
+			default :
+				if(USART_Rx_data.flag.bits.rotate_direction==1)
+					CHASSIS.Vz = speed_limit_top() ;
+				else
+					CHASSIS.Vz = -speed_limit_top() ;
+			break;
+		}
+		
+	}
+		
 }
 
 /**
@@ -337,8 +396,6 @@ float speed_limit_top(void)
 #ifdef CAP
 	if (USART_Rx_data.mode.bits.chassis_speed_mode == CHASSIS_SPEED_NORMAL)
 	{
-		if(USART_Rx_data.key.bits.Key_W||USART_Rx_data.key.bits.Key_S||USART_Rx_data.key.bits.Key_A||USART_Rx_data.key.bits.Key_D)
-		{
 			switch (powerlimit.referee_max_power)
 			{
 				case 45:
@@ -396,67 +453,7 @@ float speed_limit_top(void)
 				default:
 					CHASSIS.speed_top = TOP_SPEED_DEFAULT_CAP - TOP_SPEED_ADD_CAP;
 					break;
-			}
-		}
-		else if(!USART_Rx_data.key.bits.Key_W&&!USART_Rx_data.key.bits.Key_S&&!USART_Rx_data.key.bits.Key_A&&!USART_Rx_data.key.bits.Key_D)
-			switch (powerlimit.referee_max_power)
-			{
-				case 45:
-					CHASSIS.speed_top = TOP_SPEED_45W_CAP ;
-					break;
-
-				case 50:
-					CHASSIS.speed_top = TOP_SPEED_50W_CAP ;
-					break;
-
-				case 55:
-					CHASSIS.speed_top = TOP_SPEED_55W_CAP ;
-					break;
-
-				case 60:
-					CHASSIS.speed_top = TOP_SPEED_60W_CAP ;
-					break;
-
-				case 65:
-					CHASSIS.speed_top = TOP_SPEED_65W_CAP ;
-					break;
-
-				case 70:
-					CHASSIS.speed_top = TOP_SPEED_70W_CAP ;
-					break;
-
-				case 75:
-					CHASSIS.speed_top = TOP_SPEED_75W_CAP ;
-					break;
-
-				case 80:
-					CHASSIS.speed_top = TOP_SPEED_80W_CAP ;
-					break;
-
-				case 85:
-					CHASSIS.speed_top = TOP_SPEED_85W_CAP ;
-					break;
-
-				case 90:
-					CHASSIS.speed_top = TOP_SPEED_90W_CAP ;
-					break;
-
-				case 95:
-					CHASSIS.speed_top = TOP_SPEED_95W_CAP ;
-					break;
-
-				case 100:
-					CHASSIS.speed_top = TOP_SPEED_100W_CAP ;
-					break;
-
-				case 120:
-					CHASSIS.speed_top = TOP_SPEED_120W_CAP ;
-					break;
-
-				default:
-					CHASSIS.speed_top = TOP_SPEED_DEFAULT_CAP ;
-					break;
-			}
+			}		
 	}
 	else if (USART_Rx_data.mode.bits.chassis_speed_mode == CHASSIS_SPEED_SHIFT)
 	{
@@ -631,3 +628,15 @@ void motor_current_up(moto_measure_t *motor_data,int16_t *motor_current_lost,int
         }
     }
 }
+
+//底盘断电判断,断电返回1，否则返回0
+bool_t chassis_if_blackout(void)
+{
+	if(motor_current_time[FR]>3000||motor_current_time[FL]>3000||motor_current_time[RR]>3000||motor_current_time[RL]>3000)  
+	{
+    return 1;
+	}
+	else 
+		return 0;
+}
+

@@ -53,7 +53,6 @@ void UI_Cap_add(void);
 void UI_Cap_update(void);
 void UI_Pitch_add(void);
 void UI_Pitch_update(void);
-void UI_direction_add(void);
 //void UI_direction_update(void);
 void UI_energy_add(void);
 void UI_energy_update(void);
@@ -69,10 +68,10 @@ void UI_Task(void)
 {
 	for(;;)   
 	{	
-		qwert++;
+	qwert++;
 		UI_ID_Set();
 		if(USART_Rx_data.key.bits.Key_G== 1)
-		{	
+		{		
 			UI_chassis_crash_add();
 			UI_state_add();
 			UI_chassis_add();
@@ -82,73 +81,87 @@ void UI_Task(void)
 			UI_bullet_add();
 			UI_target_add();
 //      UI_Distance_add();
-//			UI_Pitch_add();
-			UI_direction_add();
+			UI_Pitch_add();
 			UI_energy_add();
 			UI_Cap_add();
+			UI_trajectory_add();
 			
 	UI_SendChars(&state_1);
 	osDelay (35);
-//	UI_SendChars(&state_2);
-//	osDelay (35);
-//	UI_SendChars(&state_3);
-//	osDelay (35);
-//	UI_SendChars(&state_4);
-//	osDelay (35);
-
+	UI_SendChars(&state_2);
+	osDelay (35);
+	UI_SendChars(&state_3);
+	osDelay (35);
+	UI_SendChars(&state_4);
+	osDelay (35);
+	UI_SendChars(&state_5);
+	osDelay (35);
 //	UI_SendGraph( 5,SC_Outline_Arc_1,SC_Outline_Arc_2,SC_Outline_Line_1,SC_Outline_Line_2,SC_Vol_Arc);
 //	osDelay (40);	
 //	
 //	UI_SendGraph(7,direction_1, direction_2,direction_3,bullet_1,bullet_2 ,energy_1,chassis_crash_left);
 //	osDelay (40);
 
-//	UI_SendGraph( 7,chassis_1,chassis_2,chassis_3,chassis_4,chassis_5,chassis_6,bullet_3);
-//	osDelay (40);
+	UI_SendGraph( 7,chassis_1,chassis_2,chassis_3,chassis_4,chassis_5,chassis_6,bullet_1);
+	osDelay (40);
 //	
-//	UI_SendGraph( 7,vision_1,vision_2,vision_3,vision_4,vision_5,vision_6,vision_7);
-//	osDelay (40);
-
-
+	UI_SendGraph( 7,vision_1,vision_2,vision_3,vision_4,vision_5,vision_6,vision_7);
+	osDelay (40);
+	UI_SendGraph( 5,SC_Vol_Arc,trajectory_1m_1,trajectory_1m_2,trajectory_1m_3,trajectory_1m_4);
+	osDelay (40);	
+	UI_SendGraph(5,trajectory_3m_1,trajectory_3m_2,trajectory_3m_3,trajectory_3m_4,trajectory_1m_1);
+	osDelay (40);	
+	UI_SendGraph(1,chassis_crash_left);
+	osDelay (40);	
+	UI_SendGraph(1,chassis_crash_right);
+	osDelay (40);	
 //	UI_SendGraph( 7,target_1,target_2,target_3,target_4,target_5,target_6,target_7);
 //	osDelay (40);
 //	
 ////	UI_SendGraph( 7,shoot_1,shoot_2,shoot_3,shoot_4,shoot_5,target_8,Distance);
-//	UI_SendGraph( 7,shoot_1,shoot_2,shoot_3,shoot_4,shoot_5,target_8,target_8);
-//	osDelay (40);
+	UI_SendGraph( 5,shoot_1,shoot_2,shoot_3,shoot_4,shoot_5);
+	osDelay (40);
 //	
 //	UI_SendGraph( 7,supercap_1,supercap_2,supercap_3,supercap_4,bullet_4,chassis_crash_right);
 //	osDelay (40);
 	
 
-	
+//	
 		} else {
 			UI_state_update();
 			UI_chassis_update();
 			UI_vision_update();
 			UI_shoot_update();
-			UI_supercap_update();
-			UI_bullet_update();
-//		  UI_Distance_update();
-//			UI_Pitch_update();
-//			UI_direction_update();
-			UI_energy_update();
+//			UI_supercap_update();
+//			UI_bullet_update();
+////		  UI_Distance_update();
+			UI_Pitch_update();
+////			UI_direction_update();
+//			UI_energy_update();
 		  UI_Cap_update();
-			UI_target_update();
+			UI_trajectory_update();
+//			UI_target_update();
 //		 Sentry_cmd_update();
-//	UI_SendChars(&state_1);
-//	osDelay (35);
-//	UI_SendChars(&state_2);
-//	osDelay (35);
-//	UI_SendChars(&state_3);
-//	osDelay (35);
-//	UI_SendChars(&state_4);
-//	osDelay (35);
-//			
-//	UI_SendGraph( 7,chassis_1,chassis_2,chassis_3,chassis_4,chassis_5,chassis_6,energy_1);
-//	osDelay (40);	
-//			
-//	UI_SendGraph( 7,vision_1,vision_2,vision_3,vision_4,vision_5,vision_6,vision_7);
-//	osDelay (40);		
+	UI_SendChars(&state_1);
+	osDelay (35);
+	UI_SendChars(&state_2);
+	osDelay (35);
+	UI_SendChars(&state_3);
+	osDelay (35);
+	UI_SendChars(&state_4);
+	osDelay (35);		
+	UI_SendChars(&state_5);
+	osDelay (35);		
+	UI_SendGraph( 7,chassis_1,chassis_2,chassis_3,chassis_4,chassis_5,chassis_6,bullet_1);
+	osDelay (40);	
+	UI_SendGraph( 7,shoot_1,shoot_2,shoot_3,shoot_4,shoot_5,Pitch_Angle_1,SC_Vol_Arc);
+	osDelay (40);
+	UI_SendGraph( 7,vision_1,vision_2,vision_3,vision_4,vision_5,vision_6,vision_7);
+	osDelay (40);	
+	UI_SendGraph(5,trajectory_3m_1,trajectory_3m_2,trajectory_3m_3,trajectory_3m_4,trajectory_1m_1);
+	osDelay (40);		
+	UI_SendGraph(5,SC_Vol_Arc,trajectory_1m_1,trajectory_1m_2,trajectory_1m_3,trajectory_1m_4);
+	osDelay (40);	
 
 //	UI_SendGraph( 7,shoot_1,shoot_2,shoot_3,shoot_4,shoot_5,direction_3,SC_Vol_Arc);
 //	osDelay (40);		
@@ -177,6 +190,8 @@ void UI_Task(void)
 //	}
 
 //}
+
+
 /**
 * @brief 根据裁判系统信息变更ui发送ID
 * @note  Change send ID
@@ -195,18 +210,21 @@ int uuii=0;
 void UI_chassis_crash_add(void)
 {
 uuii++;
-	Line_Draw( &chassis_crash_left, "99", 1, 1, 3, 3, 540, 0, 740, 400 );
-	Line_Draw( &chassis_crash_right, "100", 1, 1, 3, 3, 1380, 0, 1180, 400 );
+	Line_Draw( &chassis_crash_left, "99", 1, 1, 3, 3, 212, 35, 594, 365 );
+	Line_Draw( &chassis_crash_right, "100", 1, 1, 3, 3, 1337, 342, 1738, 24 );
 }
 
 char *C_state="C";
 char *G_state="G";
 char *S_state="S";
 char *K_state="K";
+char *Z_state="Z";
 String_Data_t state_1;
 String_Data_t state_2;
 String_Data_t state_3;
 String_Data_t state_4;
+String_Data_t state_5;
+
 //状态UI，图层1
 void UI_state_add(void)
 {
@@ -214,11 +232,13 @@ void UI_state_add(void)
 	char *G_state="G";
 	char *S_state="S";
 	char *K_state="K";
-	Char_Draw( &state_1, "101", 1, 1, 8, 5, 35, 1, 187, 607, C_state );
-	Char_Draw( &state_2, "102", 1, 1, 8, 5, 35, 1, 255, 607, G_state );
-	Char_Draw( &state_3, "103", 1, 1, 8, 5, 35, 1, 323, 607, S_state );
-	Char_Draw( &state_4, "104", 1, 1, 8, 5, 35, 1, 391, 607, K_state );
-	
+	char *Z_state="Z";
+
+	Char_Draw( &state_1, "101", 1, 1, 8, 5, 35, 1, 150, 607, C_state );
+	Char_Draw( &state_2, "102", 1, 1, 8, 5, 35, 1, 210, 607, G_state );
+	Char_Draw( &state_3, "103", 1, 1, 8, 5, 35, 1, 270, 607, S_state );
+	Char_Draw( &state_4, "104", 1, 1, 8, 5, 35, 1, 330, 607, K_state );
+	Char_Draw( &state_5, "105", 1, 1, 8, 5, 35, 1, 390, 607, Z_state );
 //	UI_SendChars(&state_1);
 //	osDelay (1);
 //	UI_SendChars(&state_2);
@@ -233,37 +253,95 @@ void UI_state_update(void)
 {
 
 	if(Report_IF_Chassis_work() == false)
-		Char_Draw( &state_1, "101", 2, 1, 8, 5, 35, 1, 187, 607, C_state );
+		Char_Draw( &state_1, "101", 2, 1, 8, 5, 35, 1, 150, 607, C_state );
 	else
-		Char_Draw( &state_1, "101", 2, 1, 3, 5, 35, 1, 187, 607, C_state );
+		Char_Draw( &state_1, "101", 2, 1, 3, 5, 35, 1, 150, 607, C_state );
 	
 	if(Report_IF_Gimbal_work() == false)
-		Char_Draw( &state_2, "102", 2, 1, 8, 5, 35, 1, 255, 607, G_state );
+		Char_Draw( &state_2, "102", 2, 1, 8, 5, 35, 1, 210, 607, G_state );
 	else
-		Char_Draw( &state_2, "102", 2, 1, 3, 5, 35, 1, 255, 607, G_state );
+		Char_Draw( &state_2, "102", 2, 1, 3, 5, 35, 1, 210, 607, G_state );
 	
 	if(Report_IF_ArmorBooster_work() == false)
-		Char_Draw( &state_3, "103", 2, 1, 8, 5, 35, 1, 323, 607, S_state );
+		Char_Draw( &state_3, "103", 2, 1, 8, 5, 35, 1, 270, 607, S_state );
 	else
-		Char_Draw( &state_3, "103", 2, 1, 3, 5, 35, 1, 323, 607, S_state );
+		Char_Draw( &state_3, "103", 2, 1, 3, 5, 35, 1, 270, 607, S_state );
 	
 	if(USART_Rx_data.mode.bits.controls_mode==CONTROL_RC_CTRL)
-		Char_Draw( &state_4, "104", 2, 1, 8, 5, 35, 1, 391, 607, K_state );
+		Char_Draw( &state_4, "104", 2, 1, 8, 5, 35, 1, 330, 607, K_state );
 	else
-		Char_Draw( &state_4, "104", 2, 1, 3, 5, 35, 1, 391, 607, K_state );
+		Char_Draw( &state_4, "104", 2, 1, 3, 5, 35, 1, 330, 607, K_state );
 	
-//	UI_SendChars(&state_1);
-//	osDelay (1);
-//	UI_SendChars(&state_2);
-//	osDelay (1);
-//	UI_SendChars(&state_3);
-//	osDelay (1);
-//	UI_SendChars(&state_4);
-//	osDelay (1);
+	if(USART_Rx_data.flag.bits.down_over_flag&&USART_Rx_data.mode.bits.gimbal_mode==GIMBAL_FOLD)
+		Char_Draw( &state_5, "105", 2, 1, 3, 5, 35, 1, 390, 607, Z_state );
+	else if(USART_Rx_data.flag.bits.down_over_flag==0&&USART_Rx_data.mode.bits.gimbal_mode==GIMBAL_FOLD)
+		Char_Draw( &state_5, "105", 2, 1, 5, 5, 35, 1, 390, 607, Z_state );
+	else
+		Char_Draw( &state_5, "105", 2, 1, 8, 5, 35, 1, 390, 607, Z_state );
+}
+//弹道
+Graph_Data_t trajectory_3m_1;
+Graph_Data_t trajectory_3m_2;
+Graph_Data_t trajectory_3m_3;
+Graph_Data_t trajectory_3m_4;
+Graph_Data_t trajectory_1m_1;
+Graph_Data_t trajectory_1m_2;
+Graph_Data_t trajectory_1m_3;
+Graph_Data_t trajectory_1m_4;
+
+void UI_trajectory_add(void)
+{
+	Line_Draw(&trajectory_3m_1,"348",1,1,8,3,944,557,1010,557);
+	Line_Draw(&trajectory_3m_2,"349",1,1,8,3,1010,557,1010,500);
+	Line_Draw(&trajectory_3m_3,"350",1,1,8,3,944,500,1010,500);
+	Line_Draw(&trajectory_3m_4,"351",1,1,8,3,944,557,944,500);
 	
+	Line_Draw(&trajectory_1m_1,"352",1,1,8,3,964,577,1050,577);
+	Line_Draw(&trajectory_1m_2,"353",1,1,8,3,1050,577,1050,480);
+	Line_Draw(&trajectory_1m_3,"354",1,1,8,3,964,480,1050,480);
+	Line_Draw(&trajectory_1m_4,"355",1,1,8,3,964,577,964,480);
 }
 
-
+void UI_trajectory_update(void)
+{
+	if(USART_Rx_data.mode.bits.shoot_mode==SHOOT_IDLE&&USART_Rx_data.flag.bits.stuck_state==1)
+	{
+		Line_Draw(&trajectory_3m_1,"348",2,1,8,3,944,557,1010,557);
+		Line_Draw(&trajectory_3m_2,"349",2,1,8,3,1010,557,1010,500);
+		Line_Draw(&trajectory_3m_3,"350",2,1,8,3,944,500,1010,500);
+		Line_Draw(&trajectory_3m_4,"351",2,1,8,3,944,557,944,500);
+		
+		Line_Draw(&trajectory_1m_1,"352",2,1,8,3,964,577,1050,577);
+		Line_Draw(&trajectory_1m_2,"353",2,1,8,3,1050,577,1050,480);
+		Line_Draw(&trajectory_1m_3,"354",2,1,8,3,964,480,1050,480);
+		Line_Draw(&trajectory_1m_4,"355",2,1,8,3,964,577,964,480);
+	}
+	else if(USART_Rx_data.mode.bits.shoot_mode!=SHOOT_IDLE&&USART_Rx_data.flag.bits.stuck_state==1)
+	{
+		Line_Draw(&trajectory_3m_1,"348",2,1,3,3,944,557,1010,557);
+		Line_Draw(&trajectory_3m_2,"349",2,1,3,3,1010,557,1010,500);
+		Line_Draw(&trajectory_3m_3,"350",2,1,3,3,944,500,1010,500);
+		Line_Draw(&trajectory_3m_4,"351",2,1,3,3,944,557,944,500);
+		
+		Line_Draw(&trajectory_1m_1,"352",2,1,3,3,964,577,1050,577);
+		Line_Draw(&trajectory_1m_2,"353",2,1,3,3,1050,577,1050,480);
+		Line_Draw(&trajectory_1m_3,"354",2,1,3,3,964,480,1050,480);
+		Line_Draw(&trajectory_1m_4,"355",2,1,3,3,964,577,964,480);
+	}
+	else
+	{
+		Line_Draw(&trajectory_3m_1,"348",2,1,5,3,944,557,1010,557);
+		Line_Draw(&trajectory_3m_2,"349",2,1,5,3,1010,557,1010,500);
+		Line_Draw(&trajectory_3m_3,"350",2,1,5,3,944,500,1010,500);
+		Line_Draw(&trajectory_3m_4,"351",2,1,5,3,944,557,944,500);
+		
+		Line_Draw(&trajectory_1m_1,"352",2,1,5,3,964,577,1050,577);
+		Line_Draw(&trajectory_1m_2,"353",2,1,5,3,1050,577,1050,480);
+		Line_Draw(&trajectory_1m_3,"354",2,1,5,3,964,480,1050,480);
+		Line_Draw(&trajectory_1m_4,"355",2,1,5,3,964,577,964,480);
+	}
+	
+}
 
 //底盘UI，图层1
 Graph_Data_t chassis_1;
@@ -301,15 +379,30 @@ void UI_chassis_update(void)
 	Line_Draw( &chassis_5, "115", 2, 1, 3, 4, 1542, 540, 1523, 581 );
 	Line_Draw( &chassis_6, "116", 2, 1, 3, 4, 1542, 539, 1542, 630 );
 	
-	if(USART_Rx_data.mode.bits.chassis_mode==CHASSIS_TOP){
-		Line_Draw( &chassis_1, "111", 2, 1, 3, 4, 1514, 588, 1495, 629 );
-		Line_Draw( &chassis_2, "112", 2, 1, 3, 4, 1476, 588, 1495, 629 );
-		Line_Draw( &chassis_3, "113", 2, 1, 3, 5, 1495, 540, 1495, 630 );
-		Line_Draw( &chassis_4, "114", 2, 1, 3, 4, 1542, 540, 1561, 581 );
-		Line_Draw( &chassis_5, "115", 2, 1, 3, 4, 1542, 540, 1523, 581 );
-		Line_Draw( &chassis_6, "116", 2, 1, 3, 4, 1542, 539, 1542, 630 );
-	}else {
-		if(CHASSIS.front_set_num == 1){
+	if(USART_Rx_data.mode.bits.chassis_mode==CHASSIS_TOP)
+	{
+		if(USART_Rx_data.flag.bits.top_mode==0)
+		{
+			Line_Draw( &chassis_1, "111", 2, 1, 3, 4, 1514, 588, 1495, 629 );
+			Line_Draw( &chassis_2, "112", 2, 1, 3, 4, 1476, 588, 1495, 629 );
+			Line_Draw( &chassis_3, "113", 2, 1, 3, 5, 1495, 540, 1495, 630 );
+			Line_Draw( &chassis_4, "114", 2, 1, 3, 4, 1542, 540, 1561, 581 );
+			Line_Draw( &chassis_5, "115", 2, 1, 3, 4, 1542, 540, 1523, 581 );
+			Line_Draw( &chassis_6, "116", 2, 1, 3, 4, 1542, 539, 1542, 630 );
+		}
+		else
+		{
+			Line_Draw( &chassis_1, "111", 2, 1, 8, 4, 1514, 588, 1495, 629 );
+			Line_Draw( &chassis_2, "112", 2, 1, 8, 4, 1476, 588, 1495, 629 );
+			Line_Draw( &chassis_3, "113", 2, 1, 8, 5, 1495, 540, 1495, 630 );
+			Line_Draw( &chassis_4, "114", 2, 1, 8, 4, 1542, 540, 1561, 581 );
+			Line_Draw( &chassis_5, "115", 2, 1, 8, 4, 1542, 540, 1523, 581 );
+			Line_Draw( &chassis_6, "116", 2, 1, 8, 4, 1542, 539, 1542, 630 );
+		}
+	}
+	else 
+		{
+		if(CHASSIS.front_set_num == 0){
 			Line_Draw( &chassis_1, "111", 2, 1, 8, 4, 1514, 588, 1495, 629 );
 			Line_Draw( &chassis_2, "112", 2, 1, 8, 4, 1476, 588, 1495, 629 );
 			Line_Draw( &chassis_3, "113", 2, 1, 8, 5, 1495, 540, 1495, 630 );
@@ -681,7 +774,7 @@ FloInt_Data_t Pitch_Angle_1;
 double Pitch_last;
 void UI_Pitch_add(void)
 {
-	Float_Draw(&Pitch_Angle_1, "181", 1, 7, 3, 15, 1, 3, 1050, 540, -INS.Pitch);//PITCH角度//图层7 字号15 小数位数1 线宽3 颜色3(橙色)
+	Float_Draw(&Pitch_Angle_1, "181", 1, 7, 3, 15, 1, 3, 1050, 540, INS.Pitch);//PITCH角度//图层7 字号15 小数位数1 线宽3 颜色3(橙色)
 //	UI_SendGraph( 1,Pitch_Angle_1);
 //	osDelay (1);
 }
@@ -690,56 +783,19 @@ void UI_Pitch_add(void)
 
 void UI_Pitch_update(void)
 {
-	if((-INS.Roll-Pitch_last)<=0.1 || (-INS.Roll-Pitch_last)>=-0.1){
+	if((INS.Pitch-Pitch_last)<=0.1 || (INS.Pitch-Pitch_last)>=-0.1){
 		if(USART_Rx_data.mode.bits.shoot_mode ==SHOOT_IDLE)
-			Float_Draw(&Pitch_Angle_1, "181", 2, 7, 6, 15, 1, 3, 1050, 540, -INS.Roll);//有变化则修改,青色
-		else Float_Draw(&Pitch_Angle_1, "181", 2, 7, 5, 15, 1, 3, 1050, 540, -INS.Roll);//有变化则修改,粉色
+			Float_Draw(&Pitch_Angle_1, "181", 2, 7, 6, 15, 1, 3, 1050, 540, INS.Pitch);//有变化则修改,青色
+		else Float_Draw(&Pitch_Angle_1, "181", 2, 7, 5, 15, 1, 3, 1050, 540, INS.Pitch);//有变化则修改,粉色
 	}
 //	UI_SendGraph( 1,Pitch_Angle_1);
 //	osDelay (1);
 	
-	Pitch_last = -INS.Roll;
+	Pitch_last = INS.Pitch;
 }
 
 
-/**
-* @brief 特殊运动模式显示
-* @note  Special ACT
-* @param 
-*/
-Graph_Data_t direction_1;//云台朝向
-Graph_Data_t direction_2;//边框圆
-Graph_Data_t direction_3;//灯条1/4圆
-//以（1350，230）为圆心
 
-void UI_direction_add(void)
-{
-		Line_Draw(&direction_1, "911", 1, 1, 6, 6, 570, 250, 570, 290 );	//操作1 添加，图层2，颜色0主色，线宽4
-		Circle_Draw(&direction_2, "912", 1, 1, 0, 2, 570, 230, 35);			//操作1 添加，图层1，颜色2绿色，线宽2，半径35
-		Arc_Draw(&direction_3, "913", 1, 2, 6, 6, 135, 225, 570, 230, 35, 35 );	//操作1 添加，图层1，颜色0主色，线宽2，半径35
-	
-//		UI_SendGraph(5,direction_1, direction_2,direction_3,direction_3,direction_3 );
-//		osDelay (5);
-}
-
-// void UI_direction_update(void)
-// {
-// 	int angle_1;
-// 	int angle_2;
-// 	double  ref;
-
-// 	ref=(motor[4].ecd - YAW_CHASSIS_FRONT)/8192*360 - 45;
-// 	if(ref<0) ref+=360;
-// 	if(ref>360) ref-=360;
-// 		if(ref>=0&&ref<=360){// 0<=ref<=180 时
-// 		angle_1 = (int)ref;
-// 		angle_2 = (int)angle_1+90;
-// 		Arc_Draw(&direction_3, "913", 2, 2, 6, 7, angle_1, angle_2, 570, 230, 35, 35 );	//操作2 更改，图层1，颜色0主色，线宽6，半径35
-// 	}
-		
-// //	UI_SendGraph(1,direction_3 );
-// //	osDelay (1);
-// }
 
 
 //剩余能量

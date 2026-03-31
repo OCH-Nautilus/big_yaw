@@ -63,6 +63,8 @@ void Error_Handler(void);
 #define RSTN_IST8310_GPIO_Port GPIOG
 #define IMU_HEAT_Pin GPIO_PIN_6
 #define IMU_HEAT_GPIO_Port GPIOF
+#define LED_R_Pin GPIO_PIN_12
+#define LED_R_GPIO_Port GPIOH
 #define DRDY_IST8310_Pin GPIO_PIN_3
 #define DRDY_IST8310_GPIO_Port GPIOG
 #define DRDY_IST8310_EXTI_IRQn EXTI3_IRQn

@@ -38,7 +38,11 @@
 
 //tip.如果板间通信出问题，那么所有电机都发0电流
 
-
+重新装车后注意改
+#define FOLD_SMALL_YAW_ANGLE 折叠模式下小yaw的目标角度
+#define FRONT_SET_1 
+#define FRONT_SET_2  将云台折叠摆向底盘正方向
+主控在云台的左前边为正方向 FRONT_SET_2
 
 
 

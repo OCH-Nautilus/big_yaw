@@ -33,5 +33,6 @@ void chassis_ecdz(void);
 void chassis_speed_calc(CHASSIS_t *ch,int16_t mode);
 void chassis_current_calc(CHASSIS_t *ch);
 void motor_current_up(moto_measure_t *motor_data,int16_t *motor_current_lost,int32_t *motor_current_time) ;
+bool_t chassis_if_blackout(void);
 
 extern CHASSIS_t CHASSIS;

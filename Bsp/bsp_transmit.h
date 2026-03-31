@@ -18,7 +18,7 @@
 #define USART_TX_HAED   0XA5
 #define USART_TX_END    0XAA
 
-#define USART_DATA_COUNT  80//发送字节数
+#define USART_DATA_COUNT  49//发送字节数
 
 typedef enum 
 {
@@ -97,8 +97,10 @@ typedef struct
                 uint8_t shoot_l :1;// 位3-7，保留位
                 uint8_t shoot_r :1;
 								uint8_t	down_over_flag :1;
-                uint8_t reserved_flags_1 : 2; // 位6-7，保留位
-                uint8_t reserved_flags_2 : 8; // 位8-15，保留位				
+								uint8_t	rotate_direction:1;
+                uint8_t top_mode : 1; // 小陀螺变速模式
+                uint8_t detect_flag :1;
+								uint8_t re_flag : 7; // 位8-15，保留位										
             }bits;
          } flag;
     uint8_t tail;
@@ -109,7 +111,7 @@ typedef struct
 {
 	uint8_t head;
 	float chassis_diff_angle;
-	uint8_t trigger_back_over_flag;
+	uint8_t chassis_if_blackout;
 	uint8_t trigger_weak_flag;
 	float initial_speed;
 	float ins_big_yaw;
@@ -125,8 +127,7 @@ typedef struct
 	int16_t speed_out;
 	int16_t chassis_given_current;
 	int16_t chassis_speed_rpm;
-	float data[8];
-	
+	uint8_t vision_color;
 	uint8_t tail;
 }USART_TX_data_t;
 

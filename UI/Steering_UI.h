@@ -124,6 +124,20 @@ void UI_Shift_Mode(void);
 
 void UI_Cap_update(void);
 void UI_Cap_add(void);
+
+//弹道落点
+Graph_Data_t trajectory_3m_1;
+Graph_Data_t trajectory_3m_2;
+Graph_Data_t trajectory_3m_3;
+Graph_Data_t trajectory_3m_4;
+Graph_Data_t trajectory_1m_1;
+Graph_Data_t trajectory_1m_2;
+Graph_Data_t trajectory_1m_3;
+Graph_Data_t trajectory_1m_4;
+
+void UI_trajectory_add(void);
+void UI_trajectory_update(void);
+
 /*-----------------------------------------整活层-----------------------------------------*/
 /**
  * @brief NAUTILUS之LOGO显示
@@ -241,6 +255,7 @@ extern String_Data_t state_1;
 extern String_Data_t state_2;
 extern String_Data_t state_3;
 extern String_Data_t state_4;
+extern String_Data_t state_5;
 
 extern Graph_Data_t chassis_1;
 extern Graph_Data_t chassis_2;

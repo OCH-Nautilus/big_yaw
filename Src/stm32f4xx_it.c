@@ -271,7 +271,7 @@ void TIM2_IRQHandler(void)
 
 /**
   * @brief This function handles USART1 global interrupt.
-  */int qzz;
+  */int qzz=0;
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
@@ -424,6 +424,43 @@ void DMA2_Stream7_IRQHandler(void)
 
   /* USER CODE END DMA2_Stream7_IRQn 1 */
 }
+
+//void USART6_IRQHandler(void)
+//{
+//	if (__HAL_UART_GET_FLAG(&huart6, UART_FLAG_IDLE) && 
+//      __HAL_UART_GET_IT_SOURCE(&huart6, UART_IT_IDLE))
+////	if (
+////      __HAL_UART_GET_IT_SOURCE(&huart1, UART_IT_IDLE))
+//    {
+//		//���䷢�����ڿ����жϺ�������Ҫ���SR��DR�Ĵ�����
+//		//��Ϊ���ǻ������ݵĻ�����һ������DMA���䣬���ǻᱻDMAֱ�Ӱ���
+//		//�����ڷ���DMA�����жϺ�Ҫ�����?���Ĵ�����ֱ�Ӷ�ȡ�Ϳ��������?
+//		uint16_t tmp = huart6.Instance->SR;
+//		tmp = huart6.Instance->DR;
+//		tmp--;
+//		
+//		static uint16_t temp;
+//		__HAL_UART_CLEAR_IDLEFLAG(&huart6);//��������жϱ�־�?
+//		HAL_UART_AbortReceive(&huart6);
+////		__HAL_DMA_DISABLE(huart1.hdmarx);
+//     	       temp = huart6.hdmarx->Instance->NDTR;
+//		//RX_BUFFER_COUNTҪ���õı�ʵ��Ҫ���յĶ࣬CHASSIS_Rx_buff_count��ʵ�ʽ��ܵ��ֽ���
+//			qzz = DATA_COUNT_RX- temp;
+//		if((DATA_COUNT_RX- temp) == DATA_COUNT)
+//		{
+//			
+//			Head1_data_Handle(USART_Rx_data_handle,&USART_Rx_data);					
+//			
+//		}
+////		DMA2->LIFCR = DMA_FLAG_DMEIF1_5 | DMA_FLAG_FEIF1_5 | DMA_FLAG_HTIF1_5 | DMA_FLAG_TCIF1_5 | DMA_FLAG_TEIF1_5;
+////		__HAL_DMA_SET_COUNTER(huart1.hdmarx, DATA_COUNT_4);
+////		__HAL_DMA_ENABLE(huart1.hdmarx);       
+
+//			HAL_UART_Receive_DMA(&huart6,USART_Rx_data_handle,DATA_COUNT_RX);
+//	}
+//  /* USER CODE END USART1_IRQn 0 */
+//  HAL_UART_IRQHandler(&huart6);
+//}
 
 /* USER CODE BEGIN 1 */
 
